@@ -1,6 +1,6 @@
 ## ReadWriteProcMemUtil: `ReadProcMem` and `WriteProcMem`
 
-Dual executable to manipulate other processes memory from the commandline or (python) scripts.
+Dual executable to manipulate other processes memory from the commandline or (python) scripts. [Download](https://github.com/skirsten/ReadWriteProcMemUtil/releases)
 
 ```
 [Read|Write]ProcMem.exe [-v|--verbose|-h|--help] exe|PID|Window "BaseModule: baseoffset offset1 offset2 offsetn" data commands...
