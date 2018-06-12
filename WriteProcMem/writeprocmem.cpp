@@ -43,32 +43,39 @@ int processCommandArgs(std::deque<std::string> args, uintptr_t& address, HANDLE&
 		};
 
 		//TODO: make this prettier (maybe in a list with lambdas?)
-
-		if (type == "-i8" || type == "--int8") {
-			writeToProcess((char)std::stoi(data, 0, 0));
-		} else if (type == "-u8" || type == "--unsigned8") {
-			writeToProcess((unsigned char)std::stoi(data, 0, 0));
-		} else if (type == "-i16" || type == "--int16") {
-			writeToProcess((short)std::stoi(data, 0, 0));
-		} else if (type == "-u16" || type == "--unsigned16") {
-			writeToProcess((unsigned short)std::stoi(data, 0, 0));
-		} else if (type == "-i32" || type == "--int32") {
-			writeToProcess(std::stoi(data, 0, 0)); // sizeof(int) = 4
-		} else if (type == "-u32" || type == "--unsigned32") {
-			writeToProcess(std::stol(data, 0, 0)); // sizeof(long) = 4
-		} else if (type == "-i64" || type == "--int64") {
-			writeToProcess(std::stoll(data, 0, 0)); // sizeof(long long) = 8
-		} else if (type == "-u64" || type == "--unsigned64") {
-			writeToProcess(std::stoull(data, 0, 0)); // sizeof(unsigned long long) = 8
-		} else if (type == "-f" || type == "--float") {
-			writeToProcess(std::stof(data));
-		} else if (type == "-d" || type == "--double") {
-			writeToProcess(std::stod(data));
-		} else if (type == "-s" || type == "--skip") {
-			address += std::stoi(data);	// supporting negative offset because why not
-		} else {
-			std::cerr << "unknown type \"" << type << "\"" << std::endl;
-			return 3;
+		try {
+			if (type == "-i8" || type == "--int8") {
+				writeToProcess((char)std::stoi(data, 0, 0));
+			} else if (type == "-u8" || type == "--unsigned8") {
+				writeToProcess((unsigned char)std::stoul(data, 0, 0));
+			} else if (type == "-i16" || type == "--int16") {
+				writeToProcess((short)std::stoi(data, 0, 0));
+			} else if (type == "-u16" || type == "--unsigned16") {
+				writeToProcess((unsigned short)std::stoul(data, 0, 0));
+			} else if (type == "-i32" || type == "--int32") {
+				writeToProcess(std::stoi(data, 0, 0)); // sizeof(int) = 4
+			} else if (type == "-u32" || type == "--unsigned32") {
+				writeToProcess(std::stoul(data, 0, 0)); // sizeof(long) = 4
+			} else if (type == "-i64" || type == "--int64") {
+				writeToProcess(std::stoll(data, 0, 0)); // sizeof(long long) = 8
+			} else if (type == "-u64" || type == "--unsigned64") {
+				writeToProcess(std::stoull(data, 0, 0)); // sizeof(unsigned long long) = 8
+			} else if (type == "-f" || type == "--float") {
+				writeToProcess(std::stof(data));
+			} else if (type == "-d" || type == "--double") {
+				writeToProcess(std::stod(data));
+			} else if (type == "-s" || type == "--skip") {
+				address += std::stoi(data, 0, 0);	// supporting negative offset because why not
+			} else {
+				std::cerr << "unknown type \"" << type << "\"" << std::endl;
+				return 3;
+			}
+		} catch (const std::invalid_argument&) {
+			std::cerr << "failed to parse " << type << " with value " << data << std::endl;
+			return 4;
+		} catch (const std::out_of_range&) {
+			std::cerr << "failed to parse " << type << " with value " << data << " is out of range" << std::endl;
+			return 5;
 		}
 
 		if (error) return 2;

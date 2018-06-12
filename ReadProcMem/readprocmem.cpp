@@ -65,7 +65,7 @@ int processCommandArgs(std::deque<std::string> args, uintptr_t& address, HANDLE&
 		} else if (type == "-u32" || type == "--unsigned32") {
 			unsigned int data;
 			readFromProcess(data);
-			std::cout << data; // sizeof(long) = 4
+			std::cout << data; // sizeof(unsigned int) = 4
 		} else if (type == "-i64" || type == "--int64") {
 			long long data;
 			readFromProcess(data);
@@ -75,6 +75,8 @@ int processCommandArgs(std::deque<std::string> args, uintptr_t& address, HANDLE&
 			readFromProcess(data);
 			std::cout << data; // sizeof(unsigned long long) = 8
 		} else if (type == "-f" || type == "--float") {
+			//TODO: for float and double investigate precision
+
 			float data;
 			readFromProcess(data);
 			std::cout << data;
@@ -87,8 +89,16 @@ int processCommandArgs(std::deque<std::string> args, uintptr_t& address, HANDLE&
 				std::cerr << "expected skip count after -s" << std::endl;
 				return 1;
 			}
+			try {
+				address += std::stoi(args.front(), 0, 0);	// supporting negative offset because why not
+			} catch (const std::invalid_argument&) {
+				std::cerr << "failed to parse " << type << " with value " << args.front() << std::endl;
+				return 4;
+			} catch (const std::out_of_range&) {
+				std::cerr << "failed to parse " << type << " with value " << args.front() << " is out of range" << std::endl;
+				return 5;
+			}
 
-			address += std::stoi(args.front());	// supporting negative offset because why not
 			args.pop_front();
 		} else {
 			std::cerr << "unknown type \"" << type << "\"" << std::endl;
