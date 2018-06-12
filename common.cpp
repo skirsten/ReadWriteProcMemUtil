@@ -12,7 +12,7 @@
 #include "implementation.h"
 
 void defaultHelp(const std::string& processName) {
-	std::cerr << "[Usage] " << processName << " [-v|--verbose|-h|--help] exe|pid|window \"BaseModule: baseoffset offset1 offset2 offsetn\" data commands..." << std::endl;
+	std::cerr << "[Usage] " << processName << " [-v|--verbose|-h|--help] exe|PID|Window \"BaseModule: baseoffset offset1 offset2 offsetn\" data commands..." << std::endl;
 	std::cerr << std::endl;
 	std::cerr << "  -v | --verbose         Helpful for debugging and to comprehend what is happening" << std::endl;
 	std::cerr << "  -h | --help            Print this help" << std::endl;
